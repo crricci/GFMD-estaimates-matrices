@@ -1,6 +1,8 @@
 
 using PyPlot
 using Distances
+using StaticArrays
+using BenchmarkTools
 
 include("L_GFD.jl")
 
