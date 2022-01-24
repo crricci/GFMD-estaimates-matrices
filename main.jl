@@ -4,6 +4,7 @@ using Distances
 using StaticArrays
 using BenchmarkTools
 using LinearAlgebra
+using ForwardDiff
 
 include("L_GFD.jl")
 include("R_DEBUG.jl")

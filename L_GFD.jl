@@ -6,26 +6,26 @@ function allDist(locations)
     return Dist
 end
 
-function Dᵢ(neighbors, point, u)
+function Dᵢ(neighbors, point, u, u₀)
     """ Compute D(point) = (∂x,∂y,∂xx,∂yy,∂xy)(point) wrt neighbors 
         u = [value at point, values of the function at the neighbors]'
     """ 
 
-    h = (point[1] .- neighbors[:,1])
-    k = (point[2] .- neighbors[:,2])
+    h = - (point[1] .- neighbors[:,1])
+    k = - (point[2] .- neighbors[:,2])
     d = sqrt.(h.^2 + k.^2)
     @show R = maximum(d)  # Rᵢ
     w = [weight(dᵢ,R) for dᵢ in d]
 
     A = compute_A(h,k,w)
     B = compute_B(h,k,w)
-    b = compute_b(h,k,w,u)
+    b = compute_b(h,k,w,u,u₀)
 
-    D = inv(A) * B
-    Dᵤ = D * u
-    return Dᵤ
+    # D = inv(A) * B
+    # Dᵤ = D * [u₀; u]
+    # return Dᵤ
     
-    Dᵤ = A \ b
+    return Dᵤ = A \ b
 end
 
 function compute_A(h,k,w)
@@ -81,18 +81,18 @@ function compute_B(h,k,w)
     return B
 end
 
-function compute_b(h,k,w,u)
+function compute_b(h,k,w,u,u₀)
     """ compute vector b (to remove) """ 
     ns = length(w)  # common h,k,w
     w2 = [w[i]^2 for i in 1:ns]
     
     b = zeros(5)
     for i in 1:ns
-        b[1] += (-u[1] + u[i+1]) * h[i] * w2[i]
-        b[2] += (-u[1] + u[i+1]) * k[i] * w2[i]
-        b[3] += (-u[1] + u[i+1]) * h[i]^2 * w2[i] / 2
-        b[4] += (-u[1] + u[i+1]) * k[i]^2 * w2[i] / 2
-        b[5] += (-u[1] + u[i+1]) * h[i] * k[i] * w2[i]
+        b[1] += (- u₀ + u[i]) * h[i] * w2[i]
+        b[2] += (- u₀ + u[i]) * k[i] * w2[i]
+        b[3] += (- u₀ + u[i]) * h[i]^2 * w2[i] / 2
+        b[4] += (- u₀ + u[i]) * k[i]^2 * w2[i] / 2
+        b[5] += (- u₀ + u[i]) * h[i] * k[i] * w2[i]
     end
     return b
 end
