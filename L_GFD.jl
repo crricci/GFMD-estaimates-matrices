@@ -120,4 +120,5 @@ function fourQuadrantStart(j,h,k,Dist)
         selected by the four quadrant criterion, that is returns the indices
         of the two closes point in each of the four coordinate quadrants
     """
+    
 end
