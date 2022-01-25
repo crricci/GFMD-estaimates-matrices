@@ -115,10 +115,26 @@ function closestStar(ns, j, Dist)
     return idx_neighbors
 end
 
-function fourQuadrantStart(j,h,k,Dist)
+function fourQuadrantStar(j,Dx,Dy,Dist; nPtQuad = 2)
     """ returns the index inside locations of the start 
         selected by the four quadrant criterion, that is returns the indices
-        of the two closes point in each of the four coordinate quadrants
+        of the nPtQuad closes point in each of the four coordinate quadrants
     """
+    dx = @view Dx[:,j]
+    dy = @view Dy[:,j]
+
+    points = [(dx[i],dy[i]) for i in eachindex(dx)]
     
+    I = findall(el ->  el[1] ≥ 0 && el[2] > 0, points)      # indices in I quadrant
+    II = findall(el ->  el[1] < 0 && el[2] ≥ 0, points)     # indices in II quadrant
+    III = findall(el ->  el[1] ≤ 0 && el[2] < 0, points)    # indices in III quadrant
+    IV = findall(el ->  el[1] > 0 && el[2] ≤ 0, points)     # indices in IV quadrant
+    
+    idx_neighbors = Int[]
+    push!(idx_neighbors, I[partialsortperm(Dist[I,j],1:nPtQuad)]...)
+    push!(idx_neighbors, II[partialsortperm(Dist[II,j],1:nPtQuad)]...)
+    push!(idx_neighbors, III[partialsortperm(Dist[III,j],1:nPtQuad)]...)
+    push!(idx_neighbors, IV[partialsortperm(Dist[IV,j],1:nPtQuad)]...)
+
+    return idx_neighbors
 end

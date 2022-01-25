@@ -20,11 +20,12 @@ function test()
     # ns = Npt^2
     ns = 50
     
-    j = 3950   # for j in 1:size(locations,1)
+    j = 4950   # for j in 1:size(locations,1)
     point = locations[j,:]
 
-    idx_neighbors = closestStar(ns,j,Dist)
-    
+    # idx_neighbors = closestStar(ns,j,Dist)
+    idx_neighbors = fourQuadrantStar(j,Dx,Dy,Dist; nPtQuad = 3)
+
     neighbors = locations[idx_neighbors,:]
     d = Dist[idx_neighbors,j]
     h = Dx[idx_neighbors,j]
