@@ -8,8 +8,9 @@ using ForwardDiff
 using ProgressMeter
 
 include("L_GFD.jl")
-include("R_DEBUG.jl")
 include("L_AggregateMatrix.jl")
+
+include("R_DEBUG.jl")
 
 function main()
 

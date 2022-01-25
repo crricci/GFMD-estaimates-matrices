@@ -6,8 +6,8 @@ function allDist(locations)
     return Dist
 end
 
-function Dᵢ(neighbors, point, u, u₀, h, k, d)
-    """ Compute D(point) = (∂x,∂y,∂xx,∂yy,∂xy)(point) wrt neighbors 
+function Dᵤ(u, u₀, h, k, d)
+    """ Compute Dᵤ(point) = (∂x,∂y,∂xx,∂yy,∂xy)(point) wrt neighbors 
         u = [value at point, values of the function at the neighbors]'
     """ 
 
@@ -15,14 +15,25 @@ function Dᵢ(neighbors, point, u, u₀, h, k, d)
     w = [weight(dᵢ,R) for dᵢ in d]
 
     A = compute_A(h,k,w)
-    B = compute_B(h,k,w)
     b = compute_b(h,k,w,u,u₀)
 
-    # D = inv(A) * B
-    # Dᵤ = D * [u₀; u]
-    # return Dᵤ
-    
     return Dᵤ = A \ b
+end
+
+function compute_Dᵢ(h, k, d)
+    """ Compute Dᵢ = matrix such that, if 
+        u = [value at point, values of the function at the neighbors]'
+        then Dᵤ(point) = (∂x,∂y,∂xx,∂yy,∂xy)(point) = Dᵢ * u
+    """ 
+
+    R = maximum(d)  # Rᵢ
+    w = [weight(dᵢ,R) for dᵢ in d]
+
+    A = compute_A(h,k,w)
+    B = compute_B(h,k,w)
+
+    Dᵢ = inv(A) * B
+    return Dᵢ
 end
 
 function compute_A(h,k,w)
@@ -108,6 +119,7 @@ function closestStar(ns, j, Dist)
     """ returns the index inside locations of the ns neighbors 
         chosen by the closest point criterion, that is returns the indices
         of the ns closest locations to point
+        j itself is not in idx_neighbors
     """
     d = Dist[:,j]
     idx_neighbors = partialsortperm(d,1:ns+1)[2:end] # +1 counting itself
