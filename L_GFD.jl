@@ -18,9 +18,9 @@ function Dᵢ(neighbors, point, u, u₀, h, k, d)
     B = compute_B(h,k,w)
     b = compute_b(h,k,w,u,u₀)
 
-    # D = inv(A) * B
-    # Dᵤ = D * [u₀; u]
-    # return Dᵤ
+    D = inv(A) * B
+    Dᵤ = D * [u₀; u]
+    return Dᵤ
     
     return Dᵤ = A \ b
 end
@@ -35,7 +35,7 @@ function compute_A(h,k,w)
     for i in 1:ns
         A[1,1] += h[i]^2 * w2[i]
         A[1,2] += h[i] * k[i] * w2[i]
-        A[1,3] += k[i]^3 * w2[i] / 2
+        A[1,3] += h[i]^3 * w2[i] / 2
         A[1,4] += h[i] * k[i]^2 * w2[i] / 2
         A[1,5] += h[i]^2 * k[i] * w2[i]
         A[2,2] += k[i]^2 * w2[i]
@@ -49,7 +49,7 @@ function compute_A(h,k,w)
         A[4,5] += h[i] * k[i]^3  * w2[i] / 2
         A[5,5] += h[i]^2 * k[i]^2 * w2[i] 
     end
-    A += triu(A,1)'     # symmetrize
+    A += triu(A,1)'     # symmetrize off diagonal
 
     return A
 end
@@ -59,7 +59,6 @@ function compute_B(h,k,w)
     ns = length(w)  # common h,k,w
     B = zeros(5,ns + 1)
 
-    # w2 = @SVector [wᵢ^2 for wᵢ in w]
     w2 = [w[i]^2 for i in 1:ns]
 
     B[1,1] = - sum([h[i] * w2[i] for i in 1:ns])
