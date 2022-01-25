@@ -6,15 +6,12 @@ function allDist(locations)
     return Dist
 end
 
-function Dᵢ(neighbors, point, u, u₀)
+function Dᵢ(neighbors, point, u, u₀, h, k, d)
     """ Compute D(point) = (∂x,∂y,∂xx,∂yy,∂xy)(point) wrt neighbors 
         u = [value at point, values of the function at the neighbors]'
     """ 
 
-    h = - (point[1] .- neighbors[:,1])
-    k = - (point[2] .- neighbors[:,2])
-    d = sqrt.(h.^2 + k.^2)
-    @show R = maximum(d)  # Rᵢ
+    R = maximum(d)  # Rᵢ
     w = [weight(dᵢ,R) for dᵢ in d]
 
     A = compute_A(h,k,w)
@@ -66,10 +63,10 @@ function compute_B(h,k,w)
     w2 = [w[i]^2 for i in 1:ns]
 
     B[1,1] = - sum([h[i] * w2[i] for i in 1:ns])
-    B[1,2] = - sum([k[i] * w2[i] for i in 1:ns])
-    B[1,1] = - sum([h[i]^2 * w2[i] for i in 1:ns]) / 2
-    B[1,1] = - sum([k[i]^2 * w2[i] for i in 1:ns]) / 2
-    B[1,1] = - sum([h[i] * k[i] * w2[i] for i in 1:ns])
+    B[2,1] = - sum([k[i] * w2[i] for i in 1:ns])
+    B[3,1] = - sum([h[i]^2 * w2[i] for i in 1:ns]) / 2
+    B[4,1] = - sum([k[i]^2 * w2[i] for i in 1:ns]) / 2
+    B[5,1] = - sum([h[i] * k[i] * w2[i] for i in 1:ns])
     for i in 1:ns
         B[1,i+1] = h[i] * w2[i]
         B[2,i+1] = k[i] * w2[i]
@@ -94,6 +91,7 @@ function compute_b(h,k,w,u,u₀)
         b[4] += (- u₀ + u[i]) * k[i]^2 * w2[i] / 2
         b[5] += (- u₀ + u[i]) * h[i] * k[i] * w2[i]
     end
+
     return b
 end
 
@@ -107,3 +105,19 @@ function weight(d,dₘ)
     end
 end
 
+function closestStar(ns, j, Dist)
+    """ returns the index inside locations of the ns neighbors 
+        chosen by the closest point criterion, that is returns the indices
+        of the ns closest locations to point
+    """
+    d = Dist[:,j]
+    idx_neighbors = partialsortperm(d,1:ns+1)[2:end] # +1 counting itself
+    return idx_neighbors
+end
+
+function fourQuadrantStart(j,h,k,Dist)
+    """ returns the index inside locations of the start 
+        selected by the four quadrant criterion, that is returns the indices
+        of the two closes point in each of the four coordinate quadrants
+    """
+end
