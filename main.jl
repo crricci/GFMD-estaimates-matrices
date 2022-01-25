@@ -9,6 +9,7 @@ using ProgressMeter
 
 include("L_GFD.jl")
 include("R_DEBUG.jl")
+include("L_AggregateMatrix.jl")
 
 function main()
 

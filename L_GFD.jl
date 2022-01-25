@@ -18,9 +18,9 @@ function Dᵢ(neighbors, point, u, u₀, h, k, d)
     B = compute_B(h,k,w)
     b = compute_b(h,k,w,u,u₀)
 
-    D = inv(A) * B
-    Dᵤ = D * [u₀; u]
-    return Dᵤ
+    # D = inv(A) * B
+    # Dᵤ = D * [u₀; u]
+    # return Dᵤ
     
     return Dᵤ = A \ b
 end

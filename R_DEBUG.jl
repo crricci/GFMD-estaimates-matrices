@@ -47,9 +47,9 @@ end
 function testAll()
     Npt = 100
 
-    # locations = testLocations(Npt^2) 
-    locations = hcat([[x,y] for x in LinRange(-1,1,Npt) for y in LinRange(-1,1,Npt)]...)'
-    locations += 0.001 * rand(Npt^2,2)
+    locations = testLocations(Npt^2) 
+    # locations = hcat([[x,y] for x in LinRange(-1,1,Npt) for y in LinRange(-1,1,Npt)]...)'
+    # locations += 0.001 * rand(Npt^2,2)
 
     x = locations[:,1]
     y = locations[:,2]
@@ -66,9 +66,9 @@ function testAll()
     @showprogress for j in 1:size(locations,1)
         point = locations[j,:]
         
-        ns = 50
+        ns = 20
         idx_neighbors = closestStar(ns,j,Dist)
-        # idx_neighbors = fourQuadrantStar(j,Dx,Dy,Dist; nPtQuad = 3)ù
+        # idx_neighbors = fourQuadrantStar(j,Dx,Dy,Dist; nPtQuad = 3)
 
         neighbors = locations[idx_neighbors,:]
         d = Dist[idx_neighbors,j]
