@@ -1,4 +1,8 @@
 
+function compute_MDiff(x,y; ns = 20)
+    Mx, My, Mxx, Myy, Mxy = compute_MDiff([x y]; ns = ns)
+    return [Mx,My,Mxx,Myy,Mxy]
+end
 
 function compute_MDiff(locations; ns = 20)
     """ Mx⋅f ≈ ∂x f
