@@ -32,6 +32,10 @@ function compute_Dᵢ(h, k, d)
     A = compute_A(h,k,w)
     B = compute_B(h,k,w)
 
+    if det(A) == 0
+        @infiltrate
+    end
+    
     Dᵢ = inv(A) * B
     return Dᵢ
 end
@@ -126,10 +130,21 @@ function closestStar(ns, j, Dist)
     return idx_neighbors
 end
 
+function radiusStar(radius, j, Dist)
+    """ returns the index inside locations of all the locations with distance
+        smaller than "radius" from location j 
+        j itself is not in idx_neighbors
+    """
+    d = Dist[:,j]
+    idx_neighbors = findall(x -> x <= radius && x != 0,d)
+    return idx_neighbors
+end
+
 function fourQuadrantStar(j,Dx,Dy,Dist; nPtQuad = 2)
     """ returns the index inside locations of the start 
         selected by the four quadrant criterion, that is returns the indices
         of the nPtQuad closes point in each of the four coordinate quadrants
+        j itself is not in idx_neighbors
     """
     dx = @view Dx[:,j]
     dy = @view Dy[:,j]
