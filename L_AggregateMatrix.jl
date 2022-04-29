@@ -1,7 +1,7 @@
 
 function compute_MDiff(x,y;  method = "kneigh", ns = 20, radius = 50)
     (Mx, My, Mxx, Myy, Mxy), toRemove = compute_MDiff([x y]; method = method, ns =  ns, radius = radius)
-    return (Mx,My,Mxx,Myy,Mxy), toRemove
+    return Mx,My,Mxx,Myy,Mxy, toRemove
 end
 
 function compute_MDiff(locations; method = "kneigh", ns = 20, radius = 50)

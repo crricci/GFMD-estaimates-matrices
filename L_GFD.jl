@@ -33,7 +33,7 @@ function compute_Dᵢ(h, k, d)
     B = compute_B(h,k,w)
 
     if det(A) == 0
-        @infiltrate
+       # @infiltrate
     end
     
     Dᵢ = inv(A) * B
